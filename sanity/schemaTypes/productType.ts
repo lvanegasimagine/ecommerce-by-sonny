@@ -45,6 +45,12 @@ export const productType = defineType({
             validation: (Rule) => Rule.required().min(0),
         }),
         defineField({
+            name: 'discount',
+            title: 'Discount',
+            type: 'number',
+            validation: (Rule) => Rule.required().min(0),
+        }),
+        defineField({
             name: 'categories',
             title: 'Categories',
             type: 'array',
@@ -55,6 +61,24 @@ export const productType = defineType({
             title: 'Stock',
             type: 'number',
             validation: (Rule) => Rule.min(0),
+        }),
+        defineField({
+            name: 'label',
+            title: 'Label',
+            type: 'string',
+            validation: (Rule) => Rule.min(0),
+        }),
+        defineField({
+            name: 'status',
+            title: 'Product Status',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'New', value: 'new' },
+                    { title: 'Hot', value: 'hot' },
+                    { title: 'Sale', value: 'sale' },
+                ]
+            }
         }),
     ],
     preview: {

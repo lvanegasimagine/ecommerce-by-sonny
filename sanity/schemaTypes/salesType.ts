@@ -18,6 +18,12 @@ export const salesType = defineType({
             title: 'Sale description'
         }),
         defineField({
+            name: 'badge',
+            title: 'Discount Badge',
+            type: 'string',
+            description: 'Discount Badge Ratio'
+        }),
+        defineField({
             name: 'discountAmount',
             type: 'number',
             title: 'Discount amount',
@@ -44,6 +50,15 @@ export const salesType = defineType({
             title: 'Is Active',
             description: 'Toggle to activate/deactivate the sale',
             initialValue: true
+        }),
+        defineField({
+            name: 'image',
+            title: 'Product Image',
+            type: 'image',
+            options: {
+                hotspot: true
+            },
+            validation: (Rule) => Rule.required()
         })
     ],
     preview: {
@@ -59,7 +74,7 @@ export const salesType = defineType({
 
             return {
                 title,
-                subtitle: `${discountAmount}% off - Code: ${couponCode} - ${status}`
+                subtitle: `${discountAmount}% off - Code: ${couponCode} - ${status}`,
             }
         }
     }
