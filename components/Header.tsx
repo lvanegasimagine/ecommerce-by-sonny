@@ -11,21 +11,24 @@ import {
     UserButton,
     useUser,
 } from '@clerk/nextjs';
+import useBasketStore from '@/store/store';
 function Header() {
     const { user } = useUser();
-
+    const itemCount = useBasketStore((state) =>
+        state.items.reduce((total, item) => total + item.quantity, 0)
+    );
     const createClerkPasskey = async () => {
         try {
-            console.log('aca toy')
+            console.log('aca toy');
             const response = await user?.createPasskey();
-            console.log("🚀 ~ createClerkPasskey ~ response:", response)
+            console.log('🚀 ~ createClerkPasskey ~ response:', response);
         } catch (err) {
-            console.error("Error:", JSON.stringify(err, null, 2))
+            console.error('Error:', JSON.stringify(err, null, 2));
         }
     };
     return (
         <header className="flex flex-wrap items-center justify-between px-4 py-2">
-            <div className='flex w-full flex-wrap justify-between items-center'>
+            <div className="flex w-full flex-wrap items-center justify-between">
                 <Link
                     href={'/'}
                     className="mx-auto cursor-pointer text-2xl font-bold text-blue-500 hover:opacity-50 sm:mx-0"
@@ -43,12 +46,15 @@ function Header() {
                         className="w-full max-w-4xl rounded border bg-gray-100 px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                     />
                 </Form>
-                <div className='flex items-center space-x-4 mt-4 sm:flex-none sm:mt-0 flex-1'>
+                <div className="mt-4 flex flex-1 items-center space-x-4 sm:mt-0 sm:flex-none">
                     <Link
                         href={'/basket'}
                         className="relative flex flex-1 items-center justify-center space-x-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 sm:flex-none sm:justify-start"
                     >
                         <TrolleyIcon className="h-6 w-6" />
+                        <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                            {itemCount}
+                        </span>
                         <span> My Basket</span>
                     </Link>
                     {/* User Area */}
