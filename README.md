@@ -18,6 +18,10 @@ sanity schema extract
 sanity typegen generate
 
 npm run typegen => se tiene que realizar cada vez q uno crea una funcion solicitando la API
+
+dependencias de sanity
+
+npm install @sanity/preview-url-secret @sanity/client --legacy-peer-deps
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

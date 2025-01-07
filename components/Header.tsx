@@ -1,95 +1,89 @@
-'use client';
 import Link from 'next/link';
 import React from 'react';
 import Form from 'next/form';
-import { PackageIcon, SpinnerIcon, TrolleyIcon } from '@sanity/icons';
-import {
-    ClerkLoaded,
-    ClerkLoading,
-    SignedIn,
-    SignInButton,
-    UserButton,
-    useUser,
-} from '@clerk/nextjs';
-function Header() {
-    const { user } = useUser();
+import { ClerkLoaded, SignedIn, SignInButton, UserButton } from '@clerk/nextjs';
+import { auth, currentUser } from '@clerk/nextjs/server';
+import Container from './Container';
+import Image from 'next/image';
+import logo from '@/assets/logo.png';
+// import CartIcon from "./CartIcon";
+import { User, ShoppingBasket } from 'lucide-react';
+import CartIcon from './CartIcon';
+import { getOrderByUserId } from '@/sanity/lib/orders/getOrderByUserId';
 
-    const createClerkPasskey = async () => {
-        try {
-            console.log('aca toy')
-            const response = await user?.createPasskey();
-            console.log("🚀 ~ createClerkPasskey ~ response:", response)
-        } catch (err) {
-            console.error("Error:", JSON.stringify(err, null, 2))
-        }
-    };
+const Header = async () => {
+    const user = await currentUser();
+    const { userId } = await auth();
+    let orders = null;
+    if (userId) {
+        orders = await getOrderByUserId(userId);
+    }
+
     return (
-        <header className="flex flex-wrap items-center justify-between px-4 py-2">
-            <div className='flex w-full flex-wrap justify-between items-center'>
-                <Link
-                    href={'/'}
-                    className="mx-auto cursor-pointer text-2xl font-bold text-blue-500 hover:opacity-50 sm:mx-0"
-                >
-                    Shopr
-                </Link>
-                <Form
-                    action="/search"
-                    className="mt-2 w-full sm:mx-4 sm:mt-0 sm:w-auto sm:flex-1"
-                >
-                    <input
-                        type="text"
-                        name="query"
-                        placeholder="Search for products"
-                        className="w-full max-w-4xl rounded border bg-gray-100 px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                    />
-                </Form>
-                <div className='flex items-center space-x-4 mt-4 sm:flex-none sm:mt-0 flex-1'>
-                    <Link
-                        href={'/basket'}
-                        className="relative flex flex-1 items-center justify-center space-x-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 sm:flex-none sm:justify-start"
-                    >
-                        <TrolleyIcon className="h-6 w-6" />
-                        <span> My Basket</span>
+        <div className="sticky top-0 z-50 border-b border-b-gray-200 bg-white py-1">
+            <Container>
+                <header className="flex flex-wrap items-center justify-between gap-2 py-2">
+                    <Link href={'/'}>
+                        <Image src={logo} alt="logo" className="w-24" priority />
                     </Link>
-                    {/* User Area */}
-                    <ClerkLoading>
-                        <SpinnerIcon className="h-6 w-6 animate-spin" />
-                    </ClerkLoading>
-                    <ClerkLoaded>
-                        <SignedIn>
-                            <Link
-                                href="/orders"
-                                className="relative flex flex-1 items-center justify-center space-x-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 sm:flex-none sm:justify-start"
-                            >
-                                <PackageIcon className="h-6 w-6" />
-                                <span>My Orders</span>
-                            </Link>
-                        </SignedIn>
+                    <Form
+                        action="/search"
+                        className="w-full sm:mx-4 sm:mt-0 sm:w-auto sm:flex-1"
+                    >
+                        <input
+                            type="text"
+                            name="query"
+                            placeholder="Search for products"
+                            className="hoverEffect w-full max-w-4xl rounded-md border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                        />
+                    </Form>
+                    <div className="flex flex-1 items-center space-x-4 sm:mt-0 sm:flex-none">
+                        <CartIcon />
+                        {/* User icons */}
+                        <ClerkLoaded>
+                            <SignedIn>
+                                <Link
+                                    href={'/orders'}
+                                    className="hoverEffect flex items-center gap-2 rounded-md border border-gray-200 px-2 py-1 text-sm shadow-md hover:shadow-none"
+                                >
+                                    <ShoppingBasket className="text-2xl text-darkBlue" />
+                                    <div className="flex flex-col">
+                                        <p className="text-xs">
+                                            <span className="font-semibold">
+                                                {orders && orders?.length > 0 ? orders?.length : 0}
+                                            </span>{' '}
+                                            items
+                                        </p>
+                                        <p className="font-semibold">Orders</p>
+                                    </div>
+                                </Link>
+                            </SignedIn>
 
-                        {user ? (
-                            <div className="flex items-center space-x-2">
-                                <UserButton />
-                                <div className="hidden text-xs sm:block">
-                                    <p className="text-pretty text-gray-400">Welcome Back</p>
-                                    <p className="font-bold">{user.fullName}</p>
+                            {user ? (
+                                <div className="hoverEffect flex items-center gap-2 rounded-md border border-gray-200 px-2 py-1 text-sm shadow-md hover:shadow-none">
+                                    <UserButton />
+                                    <div className="text-xs">
+                                        <p className="text-gray-400">Welcome Back</p>
+                                        <p className="font-bold">{user?.fullName}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        ) : (
-                            <SignInButton mode="modal" />
-                        )}
-                        {user?.passkeys.length === 0 && (
-                            <button
-                                onClick={createClerkPasskey}
-                                className="animate-pulse rounded border border-blue-300 bg-white px-4 py-2 font-bold text-blue-500 hover:bg-blue-700 hover:text-white"
-                            >
-                                Create a passkey
-                            </button>
-                        )}
-                    </ClerkLoaded>
-                </div>
-            </div>
-        </header>
+                            ) : (
+                                <SignInButton mode="modal">
+                                    <div className="hoverEffect flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 px-2 py-1 text-sm shadow-md hover:shadow-none">
+                                        <User className="text-2xl text-darkBlue" />
+                                        <div className="flex flex-col">
+                                            <p className="text-xs">Account</p>
+                                            <p className="font-semibold">Login</p>
+                                        </div>
+                                    </div>
+                                </SignInButton>
+                            )}
+                        </ClerkLoaded>
+                    </div>
+                </header>
+            </Container>
+        </div>
     );
-}
+};
 
 export default Header;

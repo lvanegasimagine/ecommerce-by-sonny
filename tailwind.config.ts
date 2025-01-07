@@ -11,6 +11,9 @@ export default {
 	theme: {
 		extend: {
 			colors: {
+				darkBlue: '#6c7ecc',
+				lightBlue: '#7c86ce',
+				lightOrange: '#fca99b',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {
@@ -56,6 +59,15 @@ export default {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)',
+			},
+			animation: {
+				'spin-slow': 'spin-slow 5s linear infinite',
+			},
+			keyframes: {
+				'spin-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' },
+				},
 			},
 		},
 	},

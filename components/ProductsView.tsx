@@ -6,20 +6,28 @@ import { CategorySelectorComponent } from './ui/category-selector';
 
 interface ProductsViewProps {
     products: Product[];
-    categories: Category[]
+    categories: Category[];
+    title?: boolean;
 }
 
-export default function ProductsView({ products, categories }: ProductsViewProps) {
+export default function ProductsView({
+    products,
+    // title,
+    categories,
+}: ProductsViewProps) {
     return (
-        <div className='flex flex-col'>
-            <div className='w-full sm:w-[200px]'>
-                <CategorySelectorComponent categories={categories} />
+        <div className="pb-32">
+            <CategorySelectorComponent categories={categories} />
+            <div className="pb-5 mt-5">
+                <h2 className="text-2xl font-semibold text-gray-600">
+                    Day of the <span className="text-lightBlue">Deal</span>
+                </h2>
+                <p className="text-sm text-gray-500">
+                    Don&apos;t wait. The time will never be just right!
+                </p>
             </div>
-            <div className='flex-1'>
-                <div>
-                    <ProductGrid products={products} />
-                    <hr className='w-1/2 sm:w-3/4' />
-                </div>
+            <div>
+                <ProductGrid products={products} />
             </div>
         </div>
     );
