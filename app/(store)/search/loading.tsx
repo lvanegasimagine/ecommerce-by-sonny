@@ -1,10 +1,6 @@
-import Loader from '@/components/Loader'
-import React from 'react'
+import Loader from "@/components/Loader";
 
-const loading = () => {
-    return (
-        <Loader />
-    )
+export default function Loading() {
+    // You can add any UI inside Loading, including a Skeleton.
+    return <Loader />
 }
-
-export default loading

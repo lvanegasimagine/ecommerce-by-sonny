@@ -16,14 +16,13 @@ import { Button } from './ui/button';
 
 const DiscountBanner = async () => {
     const sales = await getActiveSaleByCouponCode();
-    console.log('🚀 ~ DiscountBanner ~ sale:', sales?.length);
 
     if (!sales) {
         return null;
     }
 
     return (
-        <Carousel className="mx-auto my-10 w-full max-w-screen-xl">
+        <Carousel className="mx-auto my-10 w-full max-w-screen-xl" opts={{ loop: true }}>
             <CarouselContent>
                 {sales.map((sale: Sale) => (
                     <CarouselItem key={sale._id}>
@@ -63,7 +62,7 @@ const DiscountBanner = async () => {
                                                 alt="bannerImage"
                                                 width={500}
                                                 height={500}
-                                                objectFit="cover"
+                                                style={{ objectFit: "cover" }}
                                                 className="h-full transition-transform duration-500 ease-in-out hover:scale-105"
                                             />
                                         </div>
@@ -74,8 +73,8 @@ const DiscountBanner = async () => {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious className='absolute left-2' />
-            <CarouselNext className='absolute right-2' />
+            <CarouselPrevious className="absolute left-2" />
+            <CarouselNext className="absolute right-2" />
         </Carousel>
     );
 };
